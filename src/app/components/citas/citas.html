@@ -1,0 +1,31 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Registrar Nueva Cita</h5>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-success" *ngIf="mensaje">{{ mensaje }}</div>
+        <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+
+        <div class="mb-3">
+          <label class="form-label">ID Paciente</label>
+          <input type="number" class="form-control" [(ngModel)]="cita.pacienteId" placeholder="Ej: 1">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">ID Psicólogo</label>
+          <input type="number" class="form-control" [(ngModel)]="cita.psicologoId" placeholder="Ej: 32">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">ID Especialidad</label>
+          <input type="number" class="form-control" [(ngModel)]="cita.especialidadId" placeholder="Ej: 23">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Fecha y Hora</label>
+          <input type="datetime-local" class="form-control" [(ngModel)]="cita.fechaHora">
+        </div>
+        <button class="btn btn-primary w-100" (click)="registrar()">Registrar Cita</button>
+      </div>
+    </div>
+  </div>
+</div>

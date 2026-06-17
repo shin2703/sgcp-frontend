@@ -1,0 +1,40 @@
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Registrar Pago</h5>
+      </div>
+      <div class="card-body">
+        <div class="alert alert-success" *ngIf="mensaje">{{ mensaje }}</div>
+        <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+
+        <div class="mb-3">
+          <label class="form-label">ID Deuda</label>
+          <input type="number" class="form-control" [(ngModel)]="pago.deudaId" placeholder="Ej: 1">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Medio de Pago</label>
+          <select class="form-select" [(ngModel)]="pago.medioPago">
+            <option value="">Seleccionar...</option>
+            <option value="efectivo">Efectivo</option>
+            <option value="tarjeta">Tarjeta</option>
+            <option value="transferencia">Transferencia</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Tipo de Comprobante</label>
+          <select class="form-select" [(ngModel)]="pago.tipo">
+            <option value="">Seleccionar...</option>
+            <option value="boleta">Boleta</option>
+            <option value="factura">Factura</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Monto (S/)</label>
+          <input type="number" class="form-control" [(ngModel)]="pago.monto" placeholder="Ej: 150.00">
+        </div>
+        <button class="btn btn-success w-100" (click)="registrar()">Registrar Pago</button>
+      </div>
+    </div>
+  </div>
+</div>
