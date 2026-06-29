@@ -19,10 +19,19 @@ export class Citas {
 
   constructor(private sgcpService: SgcpService) {}
 
+  onFechaChange(event: any) {
+    this.cita.fechaHora = event.target.value;
+  }
+
   registrar() {
     this.enviado = true;
     this.mensaje = '';
     this.error = '';
+
+    const fechaInput = document.querySelector('input[type="datetime-local"]') as HTMLInputElement;
+    if (fechaInput) {
+      this.cita.fechaHora = fechaInput.value;
+    }
 
     if (!this.cita.pacienteId || !this.cita.psicologoId || !this.cita.especialidadId || !this.cita.fechaHora) {
       this.error = 'Por favor completa todos los campos.';
@@ -49,8 +58,14 @@ export class Citas {
         this.enviado = false;
         this.cargando = false;
       },
-      error: () => {
-        this.error = 'Error al registrar la cita. Verifica los datos ingresados.';
+      error: (err: any) => {
+        if (err.error?.message?.includes('R0013') || err.error?.message?.includes('psicólogo ya tiene')) {
+          this.error = 'El psicólogo ya tiene una cita en ese horario. Elige otra fecha u hora.';
+        } else if (err.status === 0) {
+          this.error = 'No se puede conectar al servidor.';
+        } else {
+          this.error = `Error ${err.status}: ${err.error?.message || 'Verifica los datos ingresados.'}`;
+        }
         this.cargando = false;
       }
     });
