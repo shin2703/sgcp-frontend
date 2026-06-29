@@ -10,7 +10,7 @@ import { SgcpService } from '../../services/sgcp';
   styleUrl: './pagos.css'
 })
 export class Pagos {
-  pago = { deudaId: null, medioPago: '', tipo: '', monto: null };
+  pago = { deudaId: null, medioPago: '', tipoComprobante: '', monto: null };
   mensaje = '';
   error = '';
 
@@ -19,12 +19,21 @@ export class Pagos {
   registrar() {
     this.mensaje = '';
     this.error = '';
-    this.sgcpService.registrarPago(this.pago).subscribe({
+
+    const payload = {
+      deudaId: this.pago.deudaId,
+      medioPago: this.pago.medioPago,
+      tipoComprobante: this.pago.tipoComprobante
+    };
+
+    this.sgcpService.registrarPago(payload).subscribe({
       next: (res: any) => {
-        this.mensaje = `Pago registrado correctamente. Comprobante: ${res.numero}`;
-        this.pago = { deudaId: null, medioPago: '', tipo: '', monto: null };
+        this.mensaje = `Pago registrado. Comprobante: ${res.numero} — Cita: ${res.citaEstado}`;
+        this.pago = { deudaId: null, medioPago: '', tipoComprobante: '', monto: null };
       },
-      error: () => { this.error = 'Error al registrar el pago. Verifica los datos.'; }
+      error: (err: any) => {
+        this.error = `Error ${err.status}: ${err.error?.message || 'Verifica los datos.'}`;
+      }
     });
   }
 }

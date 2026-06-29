@@ -10,11 +10,13 @@
 
         <div class="mb-3">
           <label class="form-label">ID Deuda</label>
-          <input type="number" class="form-control" [(ngModel)]="pago.deudaId" placeholder="Ej: 1">
+          <input type="number" class="form-control" [(ngModel)]="pago.deudaId" placeholder="Ej: 22">
         </div>
         <div class="mb-3">
           <label class="form-label">Medio de Pago</label>
-          <select class="form-select" [(ngModel)]="pago.medioPago">
+          <select class="form-select"
+            [value]="pago.medioPago"
+            (change)="pago.medioPago = $any($event.target).value">
             <option value="">Seleccionar...</option>
             <option value="efectivo">Efectivo</option>
             <option value="tarjeta">Tarjeta</option>
@@ -23,15 +25,13 @@
         </div>
         <div class="mb-3">
           <label class="form-label">Tipo de Comprobante</label>
-          <select class="form-select" [(ngModel)]="pago.tipo">
+          <select class="form-select"
+            [value]="pago.tipoComprobante"
+            (change)="pago.tipoComprobante = $any($event.target).value">
             <option value="">Seleccionar...</option>
             <option value="boleta">Boleta</option>
             <option value="factura">Factura</option>
           </select>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Monto (S/)</label>
-          <input type="number" class="form-control" [(ngModel)]="pago.monto" placeholder="Ej: 150.00">
         </div>
         <button class="btn btn-success w-100" (click)="registrar()">Registrar Pago</button>
       </div>
