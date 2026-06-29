@@ -26,4 +26,7 @@ export class SgcpService {
   getDeudas(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/deudas`);
   }
+  getCitas(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/citas`);
+}
 }

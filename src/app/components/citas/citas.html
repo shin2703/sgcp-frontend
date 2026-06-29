@@ -1,31 +1,112 @@
 <div class="row justify-content-center">
-  <div class="col-md-8">
-    <div class="card shadow-sm">
-      <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Registrar Nueva Cita</h5>
-      </div>
-      <div class="card-body">
-        <div class="alert alert-success" *ngIf="mensaje">{{ mensaje }}</div>
-        <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
+  <div class="col-md-7">
 
-        <div class="mb-3">
-          <label class="form-label">ID Paciente</label>
-          <input type="number" class="form-control" [(ngModel)]="cita.pacienteId" placeholder="Ej: 1">
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header border-0 py-3" style="background: linear-gradient(135deg, #1a5276, #2980b9);">
+        <h5 class="mb-0 text-white">
+          <i class="bi bi-calendar-plus me-2"></i>Registrar Nueva Cita
+        </h5>
+        <small class="text-white opacity-75">CU2 — Caso: Clínicas Psicología del Perú</small>
+      </div>
+      <div class="card-body p-4">
+
+        <div class="alert alert-success border-0 d-flex align-items-center gap-2" *ngIf="mensaje">
+          <i class="bi bi-check-circle-fill"></i> {{ mensaje }}
         </div>
-        <div class="mb-3">
-          <label class="form-label">ID Psicólogo</label>
-          <input type="number" class="form-control" [(ngModel)]="cita.psicologoId" placeholder="Ej: 32">
+        <div class="alert alert-danger border-0 d-flex align-items-center gap-2" *ngIf="error">
+          <i class="bi bi-exclamation-triangle-fill"></i> {{ error }}
         </div>
-        <div class="mb-3">
-          <label class="form-label">ID Especialidad</label>
-          <input type="number" class="form-control" [(ngModel)]="cita.especialidadId" placeholder="Ej: 23">
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-muted small">ID Paciente</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-person text-primary"></i>
+              </span>
+              <input type="number" class="form-control border-start-0"
+                [(ngModel)]="cita.pacienteId"
+                [class.is-invalid]="enviado && !cita.pacienteId"
+                placeholder="Ej: 1" min="1">
+              <div class="invalid-feedback">Ingrese el ID del paciente</div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-muted small">ID Psicólogo</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-person-badge text-primary"></i>
+              </span>
+              <input type="number" class="form-control border-start-0"
+                [(ngModel)]="cita.psicologoId"
+                [class.is-invalid]="enviado && !cita.psicologoId"
+                placeholder="Ej: 32" min="1">
+              <div class="invalid-feedback">Ingrese el ID del psicólogo</div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-muted small">ID Especialidad</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-mortarboard text-primary"></i>
+              </span>
+              <input type="number" class="form-control border-start-0"
+                [(ngModel)]="cita.especialidadId"
+                [class.is-invalid]="enviado && !cita.especialidadId"
+                placeholder="Ej: 23" min="1">
+              <div class="invalid-feedback">Ingrese el ID de la especialidad</div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-muted small">Fecha y Hora</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="bi bi-clock text-primary"></i>
+              </span>
+              <input type="datetime-local" class="form-control border-start-0"
+                [(ngModel)]="cita.fechaHora"
+                [class.is-invalid]="enviado && !cita.fechaHora">
+              <div class="invalid-feedback">Seleccione la fecha y hora</div>
+            </div>
+          </div>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Fecha y Hora</label>
-          <input type="datetime-local" class="form-control" [(ngModel)]="cita.fechaHora">
+
+        <div class="d-grid mt-4">
+          <button class="btn btn-primary btn-lg" (click)="registrar()" [disabled]="cargando">
+            <span *ngIf="cargando" class="spinner-border spinner-border-sm me-2"></span>
+            <i class="bi bi-calendar-check me-2" *ngIf="!cargando"></i>
+            {{ cargando ? 'Registrando...' : 'Registrar Cita' }}
+          </button>
         </div>
-        <button class="btn btn-primary w-100" (click)="registrar()">Registrar Cita</button>
       </div>
     </div>
+
+    <div class="card border-0 shadow-sm" *ngIf="historial.length > 0">
+      <div class="card-header bg-light border-0 py-2">
+        <h6 class="mb-0 text-muted"><i class="bi bi-list-check me-2"></i>Citas registradas esta sesión</h6>
+      </div>
+      <div class="list-group list-group-flush">
+        <div class="list-group-item py-3" *ngFor="let c of historial">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <span class="badge bg-primary me-2">{{ c.codigo }}</span>
+              <strong>{{ c.pacienteNombre }}</strong>
+              <div class="text-muted small mt-1">
+                <i class="bi bi-person-badge me-1"></i>{{ c.psicologoNombre }} —
+                <i class="bi bi-calendar me-1"></i>{{ c.fechaHora | date:'dd/MM/yyyy HH:mm' }}
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="badge bg-warning text-dark">Deuda: S/ {{ c.deudaMonto }}</span>
+              <div class="text-muted small mt-1">{{ c.estado }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
