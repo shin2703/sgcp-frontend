@@ -38,6 +38,24 @@ export class Citas {
       return;
     }
 
+    // Validacion de fecha
+    const fecha = new Date(this.cita.fechaHora);
+    const ahora = new Date();
+    const anioActual = ahora.getFullYear();
+
+    if (isNaN(fecha.getTime())) {
+      this.error = 'La fecha ingresada no es válida.';
+      return;
+    }
+    if (fecha.getFullYear() < 2000 || fecha.getFullYear() > anioActual + 1) {
+      this.error = `El año de la cita debe estar entre 2000 y ${anioActual + 1}.`;
+      return;
+    }
+    if (fecha < ahora) {
+      this.error = 'La fecha de la cita no puede ser anterior a la fecha y hora actual.';
+      return;
+    }
+
     this.cargando = true;
     const fechaFormateada = this.cita.fechaHora.length === 16
       ? this.cita.fechaHora + ':00'
